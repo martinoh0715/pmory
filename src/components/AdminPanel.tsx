@@ -39,8 +39,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
   const [showJsonExport, setShowJsonExport] = useState(false);
   const [jsonExportType, setJsonExportType] = useState<'mentors' | 'jobs' | 'settings'>('mentors');
 
-  // Admin password - In production, this should be environment variable or backend auth
-  const ADMIN_PASSWORD = 'dh960122!';
+  // Admin password - Fixed the password
+  const ADMIN_PASSWORD = 'pmory2025admin';
 
   useEffect(() => {
     // Load subscribers from localStorage
@@ -57,6 +57,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
         setMentors(JSON.parse(adminMentors));
       } catch (error) {
         console.error('Error loading admin mentors:', error);
+        setMentors(mentorsData);
       }
     }
     
@@ -65,6 +66,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
         setJobs(JSON.parse(adminJobs));
       } catch (error) {
         console.error('Error loading admin jobs:', error);
+        setJobs(jobsData);
       }
     }
     
@@ -73,6 +75,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
         setSettings(JSON.parse(adminSettings));
       } catch (error) {
         console.error('Error loading admin settings:', error);
+        setSettings(settingsData);
       }
     }
     
@@ -83,11 +86,15 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
 
   // Save data to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('pmory_mentors', JSON.stringify(mentors));
+    if (mentors.length > 0) {
+      localStorage.setItem('pmory_mentors', JSON.stringify(mentors));
+    }
   }, [mentors]);
 
   useEffect(() => {
-    localStorage.setItem('pmory_jobs', JSON.stringify(jobs));
+    if (jobs.length > 0) {
+      localStorage.setItem('pmory_jobs', JSON.stringify(jobs));
+    }
   }, [jobs]);
 
   useEffect(() => {
@@ -121,7 +128,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
 
   const handleAddMentor = () => {
     const newMentor = {
-      id: Math.max(...mentors.map(m => m.id)) + 1,
+      id: Math.max(...mentors.map(m => m.id), 0) + 1,
       name: '',
       role: '',
       company: '',
@@ -152,7 +159,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
 
   const handleAddJob = () => {
     const newJob: Job = {
-      id: Math.max(...jobs.map(j => j.id)) + 1,
+      id: Math.max(...jobs.map(j => j.id), 0) + 1,
       title: '',
       company: '',
       location: '',
@@ -373,9 +380,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
               
               <div className="mt-6 p-4 bg-gray-50 rounded-lg">
                 <p className="text-xs text-gray-600">
-                  <strong>Security Note:</strong> This is a basic password protection. 
-                  For production use, implement proper authentication with user accounts, 
-                  JWT tokens, and backend validation.
+                  <strong>Password:</strong> pmory2025admin
                 </p>
               </div>
             </div>
@@ -410,7 +415,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
               {activeTab === 'mentors' && (
                 <div>
                   <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-lg font-semibold">Manage Mentors</h3>
+                    <h3 className="text-lg font-semibold">Manage Mentors ({mentors.length})</h3>
                     <button
                       onClick={handleAddMentor}
                       className="flex items-center space-x-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700"
@@ -452,6 +457,13 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                             onChange={(e) => handleUpdateMentor(mentor.id, 'email', e.target.value)}
                             className="border border-gray-300 rounded px-3 py-2"
                           />
+                          <input
+                            type="text"
+                            placeholder="Location"
+                            value={mentor.location}
+                            onChange={(e) => handleUpdateMentor(mentor.id, 'location', e.target.value)}
+                            className="border border-gray-300 rounded px-3 py-2"
+                          />
                           <select
                             value={mentor.type}
                             onChange={(e) => handleUpdateMentor(mentor.id, 'type', e.target.value)}
@@ -461,6 +473,24 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                             <option value="student">Student</option>
                             <option value="professor">Professor</option>
                           </select>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                          <textarea
+                            placeholder="Bio"
+                            value={mentor.bio || ''}
+                            onChange={(e) => handleUpdateMentor(mentor.id, 'bio', e.target.value)}
+                            className="border border-gray-300 rounded px-3 py-2"
+                            rows={2}
+                          />
+                          <input
+                            type="text"
+                            placeholder="Expertise (comma separated)"
+                            value={Array.isArray(mentor.expertise) ? mentor.expertise.join(', ') : ''}
+                            onChange={(e) => handleUpdateMentor(mentor.id, 'expertise', e.target.value.split(',').map(s => s.trim()).filter(s => s))}
+                            className="border border-gray-300 rounded px-3 py-2"
+                          />
+                        </div>
+                        <div className="flex justify-end mt-4">
                           <button
                             onClick={() => handleDeleteMentor(mentor.id)}
                             className="flex items-center justify-center space-x-1 bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700"
@@ -790,17 +820,6 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                   </div>
                 </div>
               )}
-            </div>
-
-            {/* Instructions */}
-            <div className="border-t border-gray-200 p-6 bg-gray-50">
-              <h4 className="font-semibold text-gray-900 mb-2">Security Status:</h4>
-              <div className="text-sm text-gray-600 space-y-1">
-                <p>🔒 <strong>Basic Password Protection:</strong> Admin panel now requires password authentication</p>
-                <p>⏱️ <strong>Session-Based:</strong> Authentication expires when browser closes</p>
-                <p>⚠️ <strong>Production Note:</strong> Implement proper user authentication, JWT tokens, and backend validation</p>
-                <p>📧 <strong>Current Password:</strong> <code className="bg-gray-200 px-1 rounded">pmory2025admin</code></p>
-              </div>
             </div>
           </>
         )}
