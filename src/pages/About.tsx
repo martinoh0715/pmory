@@ -7,6 +7,7 @@ const About: React.FC = () => {
     role: 'Founder & Developer',
     year: 'Class of 2026',
     bio: 'Busniness Administration Major with Information System & Operation Management, Marketing Concentration',
+    image: '',
   };
 
   return (
