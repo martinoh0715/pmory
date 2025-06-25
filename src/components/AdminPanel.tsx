@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Eye, EyeOff, Save, Plus, Trash2, Edit3, Calendar, Building, Lock } from 'lucide-react';
+import { Settings, Eye, EyeOff, Save, Plus, Trash2, Edit3, Calendar, Building, Lock, Copy, Download } from 'lucide-react';
 import mentorsData from '../data/mentors.json';
 import jobsData from '../data/jobs.json';
 import settingsData from '../config/settings.json';
@@ -36,6 +36,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
   const [showEmails, setShowEmails] = useState(false);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
   const [isAddingJob, setIsAddingJob] = useState(false);
+  const [showJsonExport, setShowJsonExport] = useState(false);
+  const [jsonExportType, setJsonExportType] = useState<'mentors' | 'jobs' | 'settings'>('mentors');
 
   // Admin password - In production, this should be environment variable or backend auth
   const ADMIN_PASSWORD = 'dh960122!';
@@ -223,6 +225,39 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
     a.click();
   };
 
+  const copyJsonToClipboard = (data: any) => {
+    const jsonString = JSON.stringify(data, null, 2);
+    navigator.clipboard.writeText(jsonString).then(() => {
+      alert('JSON copied to clipboard! You can now paste this into your GitHub file.');
+    });
+  };
+
+  const getJsonForExport = () => {
+    switch (jsonExportType) {
+      case 'mentors':
+        return mentors;
+      case 'jobs':
+        return jobs;
+      case 'settings':
+        return settings;
+      default:
+        return mentors;
+    }
+  };
+
+  const getGitHubFilePath = () => {
+    switch (jsonExportType) {
+      case 'mentors':
+        return 'src/data/mentors.json';
+      case 'jobs':
+        return 'src/data/jobs.json';
+      case 'settings':
+        return 'src/config/settings.json';
+      default:
+        return 'src/data/mentors.json';
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -312,7 +347,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                 { id: 'mentors', label: 'Mentors' },
                 { id: 'jobs', label: 'Jobs' },
                 { id: 'links', label: 'External Links' },
-                { id: 'subscribers', label: 'Subscribers' }
+                { id: 'subscribers', label: 'Subscribers' },
+                { id: 'export', label: 'Export to GitHub' }
               ].map(tab => (
                 <button
                   key={tab.id}
@@ -649,6 +685,67 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                         ))}
                       </div>
                     )}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'export' && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-6">Export to GitHub</h3>
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                    <h4 className="font-semibold text-yellow-800 mb-2">⚠️ Important: Deploy Changes</h4>
+                    <p className="text-yellow-700 text-sm">
+                      Changes made in the Admin Panel only affect your local browser. To update the live website, 
+                      you need to copy the JSON code below and paste it into the corresponding GitHub file.
+                    </p>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Select data to export:
+                      </label>
+                      <select
+                        value={jsonExportType}
+                        onChange={(e) => setJsonExportType(e.target.value as 'mentors' | 'jobs' | 'settings')}
+                        className="border border-gray-300 rounded px-3 py-2 mb-4"
+                      >
+                        <option value="mentors">Mentors Data</option>
+                        <option value="jobs">Jobs Data</option>
+                        <option value="settings">Settings Data</option>
+                      </select>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-semibold text-gray-900">
+                          GitHub File: <code className="text-sm bg-gray-200 px-2 py-1 rounded">{getGitHubFilePath()}</code>
+                        </h4>
+                        <button
+                          onClick={() => copyJsonToClipboard(getJsonForExport())}
+                          className="flex items-center space-x-2 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 text-sm"
+                        >
+                          <Copy className="h-4 w-4" />
+                          <span>Copy JSON</span>
+                        </button>
+                      </div>
+                      <pre className="bg-white border rounded p-3 text-xs overflow-auto max-h-64">
+                        {JSON.stringify(getJsonForExport(), null, 2)}
+                      </pre>
+                    </div>
+
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <h4 className="font-semibold text-blue-900 mb-2">How to Update GitHub:</h4>
+                      <ol className="text-blue-800 text-sm space-y-1 list-decimal list-inside">
+                        <li>Click "Copy JSON" above</li>
+                        <li>Go to your GitHub repository</li>
+                        <li>Navigate to <code className="bg-blue-100 px-1 rounded">{getGitHubFilePath()}</code></li>
+                        <li>Click the edit button (pencil icon)</li>
+                        <li>Replace all content with the copied JSON</li>
+                        <li>Commit the changes</li>
+                        <li>Your website will automatically update in 1-2 minutes!</li>
+                      </ol>
+                    </div>
                   </div>
                 </div>
               )}
