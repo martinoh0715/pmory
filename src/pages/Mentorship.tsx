@@ -176,18 +176,6 @@ const Mentorship: React.FC = () => {
           )}
         </div>
 
-        {/* Add Mentor Instructions */}
-        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-8">
-          <h3 className="text-lg font-semibold text-blue-900 mb-2">Want to Add a Mentor?</h3>
-          <p className="text-blue-700 mb-4">
-            Use the Admin Panel (click the settings icon ⚙️ in the navigation) to add, edit, or remove mentors. 
-            Changes will be reflected immediately on this page.
-          </p>
-          <p className="text-blue-700 text-sm">
-            <strong>Admin Password:</strong> pmory2025admin
-          </p>
-        </div>
-
         {/* Tips Section */}
         <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-2xl shadow-lg p-8 text-white">
           <h2 className="text-2xl font-bold mb-4">Networking Tips</h2>
