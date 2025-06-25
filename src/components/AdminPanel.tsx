@@ -333,7 +333,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
             )}
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-2xl"
             >
               ×
             </button>
@@ -386,7 +386,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
             </div>
           </div>
         ) : (
-          <>
+          <div>
             {/* Tabs */}
             <div className="flex border-b border-gray-200">
               {[
@@ -821,7 +821,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                 </div>
               )}
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>
