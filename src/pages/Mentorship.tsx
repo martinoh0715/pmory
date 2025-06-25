@@ -148,18 +148,6 @@ const Mentorship: React.FC = () => {
           ))}
         </div>
 
-        {/* Add Mentor Instructions */}
-        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-8">
-          <h3 className="text-lg font-semibold text-blue-900 mb-2">Want to Add a Mentor?</h3>
-          <p className="text-blue-700 mb-4">
-            To add new mentors, edit the <code className="bg-blue-100 px-2 py-1 rounded text-sm">src/data/mentors.json</code> file. 
-            Each mentor should include: name, role, company, location, expertise, image URL, type (alumni/student/professor), and email.
-          </p>
-          <p className="text-blue-700 text-sm">
-            For help with the format, check the existing mentor entry as a template.
-          </p>
-        </div>
-
         {/* Tips Section */}
         <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-2xl shadow-lg p-8 text-white">
           <h2 className="text-2xl font-bold mb-4">Networking Tips</h2>
