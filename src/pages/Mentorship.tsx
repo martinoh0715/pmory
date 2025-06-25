@@ -31,7 +31,11 @@ const Mentorship: React.FC = () => {
     if (adminMentors) {
       try {
         const parsedMentors = JSON.parse(adminMentors);
-        setMentors(parsedMentors);
+        if (Array.isArray(parsedMentors) && parsedMentors.length > 0) {
+          setMentors(parsedMentors);
+        } else {
+          setMentors(mentorsData);
+        }
       } catch (error) {
         console.error('Error parsing admin mentors:', error);
         setMentors(mentorsData);
@@ -90,15 +94,6 @@ const Mentorship: React.FC = () => {
               {filter.label}
             </button>
           ))}
-        </div>
-
-        {/* Debug Info - Remove this after testing */}
-        <div className="mb-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <h3 className="font-semibold text-yellow-800 mb-2">Debug Info:</h3>
-          <p className="text-yellow-700 text-sm">Total mentors loaded: {mentors.length}</p>
-          <p className="text-yellow-700 text-sm">Filtered mentors: {filteredMentors.length}</p>
-          <p className="text-yellow-700 text-sm">Current filter: {selectedFilter}</p>
-          <p className="text-yellow-700 text-sm">Admin data exists: {localStorage.getItem('pmory_mentors') ? 'Yes' : 'No'}</p>
         </div>
 
         {/* Mentors Grid */}
@@ -179,6 +174,18 @@ const Mentorship: React.FC = () => {
               </p>
             </div>
           )}
+        </div>
+
+        {/* Add Mentor Instructions */}
+        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-8">
+          <h3 className="text-lg font-semibold text-blue-900 mb-2">Want to Add a Mentor?</h3>
+          <p className="text-blue-700 mb-4">
+            Use the Admin Panel (click the settings icon ⚙️ in the navigation) to add, edit, or remove mentors. 
+            Changes will be reflected immediately on this page.
+          </p>
+          <p className="text-blue-700 text-sm">
+            <strong>Admin Password:</strong> pmory2025admin
+          </p>
         </div>
 
         {/* Tips Section */}
