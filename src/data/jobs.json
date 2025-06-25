@@ -1,0 +1,54 @@
+[
+  {
+    "id": 1,
+    "title": "Associate Product Manager",
+    "company": "Google",
+    "location": "Mountain View, CA",
+    "type": "APM Program",
+    "deadline": "2025-02-15",
+    "posted": "2025-01-15",
+    "status": "Open",
+    "description": "Join Google's prestigious APM program and work on products used by billions.",
+    "requirements": ["Bachelor's degree", "Strong analytical skills", "Leadership experience"],
+    "applicationLink": "https://careers.google.com/jobs/results/?q=associate%20product%20manager"
+  },
+  {
+    "id": 2,
+    "title": "Rotational Product Manager",
+    "company": "Microsoft",
+    "location": "Seattle, WA",
+    "type": "RPM Program",
+    "deadline": "2025-02-28",
+    "posted": "2025-01-20",
+    "status": "Open",
+    "description": "Rotate through different product teams and build expertise across Microsoft's ecosystem.",
+    "requirements": ["Recent graduate", "Technical background preferred", "Problem-solving skills"],
+    "applicationLink": "https://careers.microsoft.com/us/en/search-results?keywords=product%20manager"
+  },
+  {
+    "id": 3,
+    "title": "Product Manager Intern",
+    "company": "Meta",
+    "location": "Menlo Park, CA",
+    "type": "Internship",
+    "deadline": "2025-01-31",
+    "posted": "2025-01-10",
+    "status": "Closing Soon",
+    "description": "Summer internship working on Meta's family of apps and emerging technologies.",
+    "requirements": ["Currently pursuing degree", "Product sense", "Data-driven mindset"],
+    "applicationLink": "https://www.metacareers.com/jobs/?q=product%20manager%20intern"
+  },
+  {
+    "id": 4,
+    "title": "Junior Product Manager",
+    "company": "Stripe",
+    "location": "San Francisco, CA",
+    "type": "Entry Level",
+    "deadline": "2025-03-15",
+    "posted": "2025-01-25",
+    "status": "Open",
+    "description": "Help build the economic infrastructure of the internet with our payments platform.",
+    "requirements": ["0-2 years experience", "Technical curiosity", "Customer obsession"],
+    "applicationLink": "https://stripe.com/jobs/search?q=product%20manager"
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "emailjs": {
+    "serviceId": "service_ssw806l",
+    "templateIds": {
+      "jobAlert": "template_job_alert",
+      "welcomeJobAlert": "template_welcome"
+    },
+    "publicKey": "hj1R2W3pwSbVLv3TU"
+  },
+  "admin": {
+    "email": "martinoh0715@gmail.com"
+  },
+  "externalLinks": {
+    "emoryCareer": "https://career.emory.edu",
+    "emoryUniversity": "https://emory.edu",
+    "figmaBasics": "https://www.figma.com/resource-library/design-basics/",
+    "notionPM": "https://www.notion.com/help/guides/this-project-management-system-connects-the-dots-for-your-product-team",
+    "sqlBasics": "https://goizueta.emory.edu/undergraduate-business-degree/student-handbook.pdf",
+    "productRoadmapping": "https://asana.com/uses/timeline"
+  }
+}
