@@ -26,8 +26,19 @@ const Mentorship: React.FC = () => {
   const [mentors, setMentors] = useState<Mentor[]>([]);
 
   useEffect(() => {
-    // Load mentors from JSON file
-    setMentors(mentorsData);
+    // Load mentors from localStorage first (admin changes), then fallback to JSON
+    const adminMentors = localStorage.getItem('pmory_mentors');
+    if (adminMentors) {
+      try {
+        const parsedMentors = JSON.parse(adminMentors);
+        setMentors(parsedMentors);
+      } catch (error) {
+        console.error('Error parsing admin mentors:', error);
+        setMentors(mentorsData);
+      }
+    } else {
+      setMentors(mentorsData);
+    }
   }, []);
 
   const filteredMentors = selectedFilter === 'all' 
@@ -81,71 +92,93 @@ const Mentorship: React.FC = () => {
           ))}
         </div>
 
+        {/* Debug Info - Remove this after testing */}
+        <div className="mb-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <h3 className="font-semibold text-yellow-800 mb-2">Debug Info:</h3>
+          <p className="text-yellow-700 text-sm">Total mentors loaded: {mentors.length}</p>
+          <p className="text-yellow-700 text-sm">Filtered mentors: {filteredMentors.length}</p>
+          <p className="text-yellow-700 text-sm">Current filter: {selectedFilter}</p>
+          <p className="text-yellow-700 text-sm">Admin data exists: {localStorage.getItem('pmory_mentors') ? 'Yes' : 'No'}</p>
+        </div>
+
         {/* Mentors Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {filteredMentors.map((mentor) => (
-            <div key={mentor.id} className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-              <div className="text-center mb-4">
-                <img
-                  src={mentor.image}
-                  alt={mentor.name}
-                  className="w-20 h-20 rounded-full mx-auto mb-4 object-cover"
-                />
-                <h3 className="text-xl font-bold text-gray-900 mb-1">{mentor.name}</h3>
-                <p className="text-primary-600 font-medium">{mentor.role}</p>
-                <p className="text-gray-600">{mentor.company}</p>
-              </div>
-
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center space-x-2 text-gray-600">
-                  <MapPin className="h-4 w-4" />
-                  <span className="text-sm">{mentor.location}</span>
+          {filteredMentors.length > 0 ? (
+            filteredMentors.map((mentor) => (
+              <div key={mentor.id} className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                <div className="text-center mb-4">
+                  <img
+                    src={mentor.image}
+                    alt={mentor.name}
+                    className="w-20 h-20 rounded-full mx-auto mb-4 object-cover"
+                  />
+                  <h3 className="text-xl font-bold text-gray-900 mb-1">{mentor.name}</h3>
+                  <p className="text-primary-600 font-medium">{mentor.role}</p>
+                  <p className="text-gray-600">{mentor.company}</p>
                 </div>
-                {mentor.gradYear && (
+
+                <div className="space-y-3 mb-6">
                   <div className="flex items-center space-x-2 text-gray-600">
-                    <GraduationCap className="h-4 w-4" />
-                    <span className="text-sm">Class of {mentor.gradYear}</span>
+                    <MapPin className="h-4 w-4" />
+                    <span className="text-sm">{mentor.location}</span>
+                  </div>
+                  {mentor.gradYear && (
+                    <div className="flex items-center space-x-2 text-gray-600">
+                      <GraduationCap className="h-4 w-4" />
+                      <span className="text-sm">Class of {mentor.gradYear}</span>
+                    </div>
+                  )}
+                </div>
+
+                {mentor.bio && (
+                  <div className="mb-4">
+                    <p className="text-sm text-gray-600">{mentor.bio}</p>
                   </div>
                 )}
+
+                <div className="mb-6">
+                  <h4 className="text-sm font-semibold text-gray-900 mb-2">Expertise:</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {mentor.expertise.map((skill, skillIndex) => (
+                      <span
+                        key={skillIndex}
+                        className="px-2 py-1 bg-primary-100 text-primary-700 text-xs rounded-full"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {mentor.availability && (
+                  <div className="mb-4">
+                    <p className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full text-center">
+                      {mentor.availability}
+                    </p>
+                  </div>
+                )}
+
+                <button 
+                  onClick={() => handleConnectClick(mentor)}
+                  className="w-full bg-primary-600 hover:bg-primary-700 text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
+                >
+                  <Mail className="h-4 w-4" />
+                  <span>Connect</span>
+                </button>
               </div>
-
-              {mentor.bio && (
-                <div className="mb-4">
-                  <p className="text-sm text-gray-600">{mentor.bio}</p>
-                </div>
-              )}
-
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold text-gray-900 mb-2">Expertise:</h4>
-                <div className="flex flex-wrap gap-2">
-                  {mentor.expertise.map((skill, skillIndex) => (
-                    <span
-                      key={skillIndex}
-                      className="px-2 py-1 bg-primary-100 text-primary-700 text-xs rounded-full"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {mentor.availability && (
-                <div className="mb-4">
-                  <p className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full text-center">
-                    {mentor.availability}
-                  </p>
-                </div>
-              )}
-
-              <button 
-                onClick={() => handleConnectClick(mentor)}
-                className="w-full bg-primary-600 hover:bg-primary-700 text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
-              >
-                <Mail className="h-4 w-4" />
-                <span>Connect</span>
-              </button>
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <Users className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">No mentors found</h3>
+              <p className="text-gray-500">
+                {selectedFilter === 'all' 
+                  ? 'No mentors are currently available.' 
+                  : `No ${selectedFilter} mentors are currently available.`
+                }
+              </p>
             </div>
-          ))}
+          )}
         </div>
 
         {/* Tips Section */}
