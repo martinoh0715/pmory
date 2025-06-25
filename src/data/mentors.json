@@ -1,16 +1,20 @@
 [
   {
     "id": 1,
-    "name": "Sarah Chen",
+    "name": "Martin Oh",
     "role": "Senior Product Manager",
-    "company": "Google",
-    "location": "Mountain View, CA",
+    "company": "Meta",
+    "location": "Atlanta, GA",
     "gradYear": "2019",
-    "expertise": ["Consumer Products", "Machine Learning", "Mobile Apps"],
+    "expertise": [
+      "Consumer Products",
+      "Machine Learning",
+      "Mobile Apps"
+    ],
     "image": "https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=300",
-    "type": "alumni",
+    "type": "student",
     "email": "sarah.chen@example.com",
-    "bio": "Sarah is a Senior PM at Google working on consumer products. She's passionate about helping Emory students break into tech.",
+    "bio": "Test",
     "linkedIn": "https://linkedin.com/in/sarahchen",
     "availability": "Available for 30-minute coffee chats"
   }
