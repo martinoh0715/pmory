@@ -40,7 +40,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
   const [jsonExportType, setJsonExportType] = useState<'mentors' | 'jobs' | 'settings'>('mentors');
 
   // Admin password - Fixed the password
-  const ADMIN_PASSWORD = 'pmory2025admin';
+  const ADMIN_PASSWORD = 'dh960122!';
 
   useEffect(() => {
     // Load subscribers from localStorage
