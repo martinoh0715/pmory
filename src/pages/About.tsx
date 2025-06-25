@@ -5,9 +5,8 @@ const About: React.FC = () => {
   const teamMember = {
     name: 'Martin Oh',
     role: 'Founder & Developer',
-    year: 'Class of 2025',
-    bio: 'Computer Science major passionate about product management and helping fellow students.',
-    image: 'https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=300'
+    year: 'Class of 2026',
+    bio: 'Busniness Administration Major with Information System & Operation Management, Marketing Concentration',
   };
 
   return (
