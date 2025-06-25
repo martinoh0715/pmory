@@ -9,7 +9,11 @@
     "posted": "2025-01-15",
     "status": "Open",
     "description": "Join Google's prestigious APM program and work on products used by billions.",
-    "requirements": ["Bachelor's degree", "Strong analytical skills", "Leadership experience"],
+    "requirements": [
+      "Bachelor's degree",
+      "Strong analytical skills",
+      "Leadership experience"
+    ],
     "applicationLink": "https://careers.google.com/jobs/results/?q=associate%20product%20manager"
   },
   {
@@ -22,7 +26,11 @@
     "posted": "2025-01-20",
     "status": "Open",
     "description": "Rotate through different product teams and build expertise across Microsoft's ecosystem.",
-    "requirements": ["Recent graduate", "Technical background preferred", "Problem-solving skills"],
+    "requirements": [
+      "Recent graduate",
+      "Technical background preferred",
+      "Problem-solving skills"
+    ],
     "applicationLink": "https://careers.microsoft.com/us/en/search-results?keywords=product%20manager"
   },
   {
@@ -33,9 +41,13 @@
     "type": "Internship",
     "deadline": "2025-01-31",
     "posted": "2025-01-10",
-    "status": "Closing Soon",
+    "status": "Open",
     "description": "Summer internship working on Meta's family of apps and emerging technologies.",
-    "requirements": ["Currently pursuing degree", "Product sense", "Data-driven mindset"],
+    "requirements": [
+      "Currently pursuing degree",
+      "Product sense",
+      "Data-driven mindset"
+    ],
     "applicationLink": "https://www.metacareers.com/jobs/?q=product%20manager%20intern"
   },
   {
@@ -48,7 +60,11 @@
     "posted": "2025-01-25",
     "status": "Open",
     "description": "Help build the economic infrastructure of the internet with our payments platform.",
-    "requirements": ["0-2 years experience", "Technical curiosity", "Customer obsession"],
+    "requirements": [
+      "0-2 years experience",
+      "Technical curiosity",
+      "Customer obsession"
+    ],
     "applicationLink": "https://stripe.com/jobs/search?q=product%20manager"
   }
 ]
