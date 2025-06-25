@@ -1,6 +1,5 @@
 import React from 'react';
 import { Target, Heart, Users, Lightbulb } from 'lucide-react';
-import MartinImage from '../assets/martin.png';
 
 const About: React.FC = () => {
   const teamMember = {
@@ -8,7 +7,6 @@ const About: React.FC = () => {
     role: 'Founder & Developer',
     year: 'Class of 2026',
     bio: 'Business Administration Major with Information System & Operation Management, Marketing Concentration',
-    image: MartinImage,
   };
 
   return (
@@ -21,8 +19,8 @@ const About: React.FC = () => {
           </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-6">About PMory</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            PMory was created by Emory students, for Emory students. We saw the need for a centralized 
-            hub to make product management more accessible and help our peers break into this exciting field.
+            PMory was created by Emory student, for Emory students. I saw the need for a centralized 
+            hub to make product management more accessible and help peers break into this exciting field.
           </p>
         </div>
 
@@ -62,11 +60,6 @@ const About: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">Meet the Team</h2>
           <div className="flex justify-center">
             <div className="text-center max-w-sm">
-              <img
-                src={teamMember.image}
-                alt={teamMember.name}
-                className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
-              />
               <h3 className="text-xl font-bold text-gray-900 mb-1">{teamMember.name}</h3>
               <p className="text-primary-600 font-medium mb-1">{teamMember.role}</p>
               <p className="text-gray-500 text-sm mb-3">{teamMember.year}</p>
