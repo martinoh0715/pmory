@@ -47,10 +47,52 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
     const savedSubscribers = JSON.parse(localStorage.getItem('pmory_subscribers') || '[]');
     setSubscribers(savedSubscribers);
     
+    // Load admin data from localStorage if it exists
+    const adminMentors = localStorage.getItem('pmory_mentors');
+    const adminJobs = localStorage.getItem('pmory_jobs');
+    const adminSettings = localStorage.getItem('pmory_settings');
+    
+    if (adminMentors) {
+      try {
+        setMentors(JSON.parse(adminMentors));
+      } catch (error) {
+        console.error('Error loading admin mentors:', error);
+      }
+    }
+    
+    if (adminJobs) {
+      try {
+        setJobs(JSON.parse(adminJobs));
+      } catch (error) {
+        console.error('Error loading admin jobs:', error);
+      }
+    }
+    
+    if (adminSettings) {
+      try {
+        setSettings(JSON.parse(adminSettings));
+      } catch (error) {
+        console.error('Error loading admin settings:', error);
+      }
+    }
+    
     // Check if already authenticated in this session
     const isSessionAuth = sessionStorage.getItem('pmory_admin_auth') === 'true';
     setIsAuthenticated(isSessionAuth);
   }, []);
+
+  // Save data to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('pmory_mentors', JSON.stringify(mentors));
+  }, [mentors]);
+
+  useEffect(() => {
+    localStorage.setItem('pmory_jobs', JSON.stringify(jobs));
+  }, [jobs]);
+
+  useEffect(() => {
+    localStorage.setItem('pmory_settings', JSON.stringify(settings));
+  }, [settings]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,9 +115,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
   };
 
   const handleSaveSettings = () => {
-    // In a real app, this would save to a backend
-    localStorage.setItem('pmory_settings', JSON.stringify(settings));
-    alert('Settings saved! Note: In production, implement proper backend storage.');
+    // Settings are automatically saved via useEffect
+    alert('Settings saved successfully!');
   };
 
   const handleAddMentor = () => {
