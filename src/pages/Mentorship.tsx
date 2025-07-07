@@ -3,6 +3,14 @@ import { Users, MapPin, Briefcase, GraduationCap, Mail } from 'lucide-react';
 import ContactModal from '../components/ContactModal';
 import mentorsData from '../data/mentors.json';
 
+<iframe
+  src="https://moonlit-lolly-9ab72d.netlify.app"
+  width="100%"
+  height="600px"
+  style={{ border: 'none', borderRadius: '12px' }}
+  title="PMory Chatbot"
+/>
+
 interface Mentor {
   id: number;
   name: string;
