@@ -20,8 +20,8 @@ const Homepage: React.FC = () => {
     },
     {
       icon: Users,
-      title: "Mentorship Network",
-      description: "Connect with Emory PM alumni, current student PMs, and supportive professors. Access structured outreach templates to build meaningful professional relationships.",
+      title: "AI Mentor",
+      description: "Get instant answers with our AI chatbot—designed to help students navigate Emory’s Product Management landscape.",
       link: "/mentorship",
       image: "https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=600"
     },
