@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
-const LAMBDA_URL = "https://x667bbpbo6wf22bvoi27xmob3y0nrecg.lambda-url.us-east-1.on.aws/"; // <-- paste yours
+const LAMBDA_URL = import.meta.env.VITE_MENTOR_API_URL as string;
+console.log("API URL (runtime):", LAMBDA_URL);
 
 type Role = "user" | "assistant";
 type Msg = { role: Role; content: string };
