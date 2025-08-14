@@ -201,26 +201,38 @@ const Mentorship: React.FC = () => {
   <button
     className="border px-2 py-1 rounded mr-2"
     onClick={async () => {
-      try {
-        const res = await fetch(LAMBDA_URL!, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: "Ping", mode: "general" })
-        });
-        const txt = await res.text();
-        alert(
-          `Status: ${res.status}\n` +
-          `ACAO: ${res.headers.get("access-control-allow-origin")}\n` +
-          `Body: ${txt.slice(0, 200)}…`
-        );
-      } catch (e:any) {
-        alert("Network error: " + e.message);
-      }
+    try {
+      const url = new URL(LAMBDA_URL!);
+      url.search = new URLSearchParams({ q: "Hello from debug", mode }).toString();
+      const res = await fetch(url.toString(), { method: "GET" });
+      const txt = await res.text();
+      alert(
+        `GET URL:\n${url}\n\n` +
+        `Status: ${res.status}\n` +
+        `ACAO: ${res.headers.get("access-control-allow-origin")}\n\n` +
+        `Body (first 240 chars):\n${txt.slice(0,240)}`
+      );
+    } catch (e:any) {
+      alert("Network error: " + e.message);
+    }
+  }}>
+    Debug API Call (GET)
+  </button>
+
+  <button
+    className="border px-2 py-1 rounded"
+    onClick={() => {
+      const url = new URL(LAMBDA_URL!);
+      url.search = new URLSearchParams({ q: "Open in new tab", mode }).toString();
+      window.open(url.toString(), "_blank");
     }}
   >
-    Debug API Call
+    Open GET URL in new tab
   </button>
-  <span className="text-gray-500">Shows status, CORS header, and first 200 chars of the body.</span>
+
+  <div className="text-gray-500 mt-2">
+    Use this to verify exactly what the browser receives.
+  </div>
 </div>
 
 
