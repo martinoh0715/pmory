@@ -59,60 +59,72 @@ const Mentorship: React.FC = () => {
   }
 
   async function sendMessage(text?: string) {
-    const content = (text ?? input).trim();
-    if (!content || loading) return;
+  const content = (text ?? input).trim();
+  if (!content || loading) return;
 
-    if (!LAMBDA_URL) {
-      setMessages((m) => [
-        ...m,
-        { role: "user", content },
-        {
-          role: "assistant",
-          content:
-            "⚠️ Missing VITE_MENTOR_API_URL. Put your Lambda Function URL in the repo root .env and/or Amplify env vars.",
-        },
-      ]);
-      return;
-    }
+  if (!LAMBDA_URL) {
+    setMessages((m) => [
+      ...m,
+      { role: "user", content },
+      { role: "assistant", content: "⚠️ Missing VITE_MENTOR_API_URL." },
+    ]);
+    return;
+  }
 
-    setInput("");
-    setLoading(true);
-    setLastError(null);
-    setMessages((m) => [...m, { role: "user", content }]);
+  setInput("");
+  setLoading(true);
+  setLastError(null);
+  setMessages((m) => [...m, { role: "user", content }]);
 
+  const pushAnswer = (answer: string) =>
+    setMessages((m) => [...m, { role: "assistant", content: answer }]);
+
+  try {
+    // --- Try POST first (normal path) ---
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 25000);
+
+    let res: Response;
     try {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 25000);
-
-      const res = await fetch(LAMBDA_URL, {
+      res = await fetch(LAMBDA_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: content, mode }),
         signal: controller.signal,
       });
-
-      clearTimeout(timer);
-
-      if (!res.ok) {
-        const t = await res.text();
-        throw new Error(`HTTP ${res.status} ${res.statusText}: ${t}`);
-      }
-
-      const data = await res.json();
-      const answer = typeof data?.text === "string" ? data.text : "⚠️ Unexpected response.";
-      setMessages((m) => [...m, { role: "assistant", content: answer }]);
-    } catch (err: unknown) {
-      const e = err as Error;
-      const msg =
-        e?.name === "TypeError" && /fetch/i.test(String(e?.message))
-          ? "Failed to fetch (network/CORS). Check ALLOWED_ORIGIN in Lambda (no trailing slash) and verify the Function URL."
-          : e?.message || String(err);
-      setLastError(msg);
-      setMessages((m) => [...m, { role: "assistant", content: `⚠️ Error: ${msg}` }]);
     } finally {
-      setLoading(false);
+      clearTimeout(timer);
     }
+
+    if (res.ok) {
+      const data = await res.json().catch(() => ({} as any));
+      pushAnswer(typeof data?.text === "string" ? data.text : "⚠️ Unexpected response.");
+      return;
+    }
+
+    // --- If POST returns non-2xx or throws, try GET fallback (bypasses preflight) ---
+    const url = new URL(LAMBDA_URL);
+    url.search = new URLSearchParams({ q: content, mode }).toString();
+
+    const getRes = await fetch(url.toString(), { method: "GET" });
+    const getText = await getRes.text();
+
+    if (!getRes.ok) throw new Error(`HTTP ${getRes.status}: ${getText}`);
+    try {
+      const data = JSON.parse(getText);
+      pushAnswer(typeof data?.text === "string" ? data.text : getText);
+    } catch {
+      pushAnswer(getText);
+    }
+  } catch (err: any) {
+    const msg = err?.message || String(err);
+    setLastError(msg);
+    pushAnswer(`⚠️ Error: ${msg}`);
+  } finally {
+    setLoading(false);
   }
+}
+
 
   return (
     <div className="min-h-screen bg-gray-50">
