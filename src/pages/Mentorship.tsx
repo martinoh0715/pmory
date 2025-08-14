@@ -206,6 +206,34 @@ const Mentorship: React.FC = () => {
             </button>
           </div>
         </div>
+        
+        {/* TEMP debug — remove later */}
+<div className="mt-4 text-xs border rounded-xl bg-white p-3">
+  <button
+    className="border px-2 py-1 rounded mr-2"
+    onClick={async () => {
+      try {
+        const res = await fetch(LAMBDA_URL!, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: "Ping", mode: "general" })
+        });
+        const txt = await res.text();
+        alert(
+          `Status: ${res.status}\n` +
+          `ACAO: ${res.headers.get("access-control-allow-origin")}\n` +
+          `Body: ${txt.slice(0, 200)}…`
+        );
+      } catch (e:any) {
+        alert("Network error: " + e.message);
+      }
+    }}
+  >
+    Debug API Call
+  </button>
+  <span className="text-gray-500">Shows status, CORS header, and first 200 chars of the body.</span>
+</div>
+
 
         {/* Tiny debug footer to diagnose CORS/URL */}
         <div className="text-[11px] text-gray-400 mt-2 space-y-1">
