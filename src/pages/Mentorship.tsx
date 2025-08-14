@@ -4,9 +4,8 @@ type Mode = "general" | "interview" | "resume" | "storytelling";
 type Role = "user" | "assistant";
 type Msg = { role: Role; content: string };
 
-// Read the API URL from your Vite env var.
-// If this logs "undefined", your .env or Amplify env var isn't set correctly.
-const LAMBDA_URL = (import.meta as any)?.env?.VITE_MENTOR_API_URL as string | undefined;
+// Read from Vite env (set in .env and/or Amplify).
+const LAMBDA_URL: string | undefined = import.meta.env.VITE_MENTOR_API_URL;
 
 const Mentorship: React.FC = () => {
   const [mode, setMode] = useState<Mode>("general");
@@ -28,7 +27,6 @@ const Mentorship: React.FC = () => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Samples change with mode
   const samples = useMemo<Record<Mode, string[]>>(
     () => ({
       general: [
@@ -55,7 +53,6 @@ const Mentorship: React.FC = () => {
     []
   );
 
-  // Insert (do NOT auto-send)
   function insertSample(text: string) {
     setInput(text);
     textareaRef.current?.focus();
@@ -72,7 +69,7 @@ const Mentorship: React.FC = () => {
         {
           role: "assistant",
           content:
-            "⚠️ Missing VITE_MENTOR_API_URL. Add it in your repo-root .env (and in Amplify env vars) to point at your Lambda Function URL.",
+            "⚠️ Missing VITE_MENTOR_API_URL. Put your Lambda Function URL in the repo root .env and/or Amplify env vars.",
         },
       ]);
       return;
@@ -84,7 +81,6 @@ const Mentorship: React.FC = () => {
     setMessages((m) => [...m, { role: "user", content }]);
 
     try {
-      // Abort after 25s just in case
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), 25000);
 
@@ -105,11 +101,12 @@ const Mentorship: React.FC = () => {
       const data = await res.json();
       const answer = typeof data?.text === "string" ? data.text : "⚠️ Unexpected response.";
       setMessages((m) => [...m, { role: "assistant", content: answer }]);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const e = err as Error;
       const msg =
-        err?.name === "TypeError" && /fetch/i.test(String(err?.message))
-          ? "Failed to fetch (network/CORS). Check ALLOWED_ORIGIN in Lambda (no trailing slash) and confirm the Function URL is correct."
-          : err?.message || String(err);
+        e?.name === "TypeError" && /fetch/i.test(String(e?.message))
+          ? "Failed to fetch (network/CORS). Check ALLOWED_ORIGIN in Lambda (no trailing slash) and verify the Function URL."
+          : e?.message || String(err);
       setLastError(msg);
       setMessages((m) => [...m, { role: "assistant", content: `⚠️ Error: ${msg}` }]);
     } finally {
@@ -142,7 +139,7 @@ const Mentorship: React.FC = () => {
           ))}
         </div>
 
-        {/* Mode-specific samples: click = insert; arrow = send */}
+        {/* Samples: click = insert; arrow = send */}
         <div className="mt-4 grid sm:grid-cols-2 gap-2">
           {samples[mode].map((q) => (
             <div key={q} className="flex items-center gap-2">
@@ -192,8 +189,8 @@ const Mentorship: React.FC = () => {
               rows={1}
               placeholder="Ask about resumes, interviews, PRDs, roadmaps…"
               value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
+              onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   sendMessage();
@@ -210,5 +207,15 @@ const Mentorship: React.FC = () => {
           </div>
         </div>
 
-        {/* Debug footer (helps kill “Failed to fetch”) */}
-        <div c
+        {/* Tiny debug footer to diagnose CORS/URL */}
+        <div className="text-[11px] text-gray-400 mt-2 space-y-1">
+          <div>API URL seen by the browser: <code>{String(LAMBDA_URL || "undefined")}</code></div>
+          <div>Origin: <code>{typeof window !== "undefined" ? window.location.origin : ""}</code></div>
+          {lastError && <div className="text-amber-600">Last error: {lastError}</div>}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Mentorship;
