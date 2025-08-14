@@ -63,11 +63,7 @@ const Mentorship: React.FC = () => {
   if (!content || loading) return;
 
   if (!LAMBDA_URL) {
-    setMessages((m) => [
-      ...m,
-      { role: "user", content },
-      { role: "assistant", content: "⚠️ Missing VITE_MENTOR_API_URL." },
-    ]);
+    setMessages((m) => [...m, { role: "user", content }, { role: "assistant", content: "⚠️ Missing VITE_MENTOR_API_URL." }]);
     return;
   }
 
@@ -80,41 +76,21 @@ const Mentorship: React.FC = () => {
     setMessages((m) => [...m, { role: "assistant", content: answer }]);
 
   try {
-    // --- Try POST first (normal path) ---
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 25000);
-
-    let res: Response;
-    try {
-      res = await fetch(LAMBDA_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: content, mode }),
-        signal: controller.signal,
-      });
-    } finally {
-      clearTimeout(timer);
-    }
-
-    if (res.ok) {
-      const data = await res.json().catch(() => ({} as any));
-      pushAnswer(typeof data?.text === "string" ? data.text : "⚠️ Unexpected response.");
-      return;
-    }
-
-    // --- If POST returns non-2xx or throws, try GET fallback (bypasses preflight) ---
+    // Build GET URL: ?q=<message>&mode=<mode>
     const url = new URL(LAMBDA_URL);
     url.search = new URLSearchParams({ q: content, mode }).toString();
 
-    const getRes = await fetch(url.toString(), { method: "GET" });
-    const getText = await getRes.text();
+    const res = await fetch(url.toString(), { method: "GET" });
+    const bodyText = await res.text();
 
-    if (!getRes.ok) throw new Error(`HTTP ${getRes.status}: ${getText}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${bodyText}`);
+
+    // Try to parse JSON; if it fails, just show raw text
     try {
-      const data = JSON.parse(getText);
-      pushAnswer(typeof data?.text === "string" ? data.text : getText);
+      const data = JSON.parse(bodyText);
+      pushAnswer(typeof data?.text === "string" ? data.text : bodyText);
     } catch {
-      pushAnswer(getText);
+      pushAnswer(bodyText);
     }
   } catch (err: any) {
     const msg = err?.message || String(err);
@@ -124,6 +100,7 @@ const Mentorship: React.FC = () => {
     setLoading(false);
   }
 }
+
 
 
   return (
