@@ -76,7 +76,6 @@ const Mentorship: React.FC = () => {
     setMessages((m) => [...m, { role: "assistant", content: answer }]);
 
   try {
-    // Build GET URL: ?q=<message>&mode=<mode>
     const url = new URL(LAMBDA_URL);
     url.search = new URLSearchParams({ q: content, mode }).toString();
 
@@ -85,7 +84,6 @@ const Mentorship: React.FC = () => {
 
     if (!res.ok) throw new Error(`HTTP ${res.status}: ${bodyText}`);
 
-    // Try to parse JSON; if it fails, just show raw text
     try {
       const data = JSON.parse(bodyText);
       pushAnswer(typeof data?.text === "string" ? data.text : bodyText);
